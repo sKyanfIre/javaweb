@@ -10,11 +10,11 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
  */
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds = 1800)
 public class SessionConfig {
-    @Value("${redis.port:6379}")
+    @Value("${spring.redis.port:6379}")
     private int port;
-    @Value("${redis.hostname:localhost}")
+    @Value("${spring.redis.hostname:localhost}")
     private String hostName;
-    @Value("${redis.password}")
+    @Value("${spring.redis.password}")
     private String password;
 
     @Bean
@@ -22,7 +22,7 @@ public class SessionConfig {
         JedisConnectionFactory connection = new JedisConnectionFactory();
         connection.setHostName(hostName);
         connection.setPort(port);
-        connection.setPassword(password);
+//        connection.setPassword(password);
         return connection;
 
     }}
