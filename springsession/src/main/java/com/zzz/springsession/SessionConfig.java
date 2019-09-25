@@ -16,8 +16,8 @@ public class SessionConfig {
     private int port;
     @Value("${spring.redis.hostname:localhost}")
     private String hostName;
-    @Value("${spring.redis.password}")
-    private String password;
+//    @Value("${spring.redis.password}")
+//    private String password;
 
     @Bean
     public JedisConnectionFactory connectionFactory(){
