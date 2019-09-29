@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(username);
         user.setPassword(password);
 
-        return null;
+        return userDao.selectUser(user);
     }
 
     @Override

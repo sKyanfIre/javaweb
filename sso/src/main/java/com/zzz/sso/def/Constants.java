@@ -14,5 +14,9 @@ public class Constants {
      * 请求报文字段缺失
      */
     public final static String ERR_CODE_MISSING_BIZ = "0001";
+    /**
+     * 通用失败
+     */
+    public final static String ERR_FAILURE = "9999";
     public final static String VALID = "1";
 }
