@@ -16,6 +16,6 @@ public class User {
     private String userId;
     private String registerDate;
     private String updateDate;
-    private String isValid;
+    private String valid;
 
 }

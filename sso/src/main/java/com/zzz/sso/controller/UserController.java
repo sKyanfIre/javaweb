@@ -50,4 +50,58 @@ public class UserController {
         respVo.setBaseResponse(Constants.SUCCESS_CODE,"登录成功");
         return respVo;
     }
+    @RequestMapping(value = "/logout",method = RequestMethod.POST)
+    public BaseResponseVo logout(HttpSession session){
+        logger.info("调用【/user/logout】接口开始");
+        session.removeAttribute("loginUser");
+        logger.info("退出成功！");
+        BaseResponseVo respVo = new BaseResponseVo();
+        respVo.setBaseResponse(Constants.SUCCESS_CODE,"退出成功");
+        logger.info("调用【/user/logout】接口结束，返回报文：" + respVo);
+        return respVo;
+    }
+    @RequestMapping(value = "/isLogin",method = RequestMethod.POST)
+    public BaseResponseVo isLogin(@RequestBody UserRequestVo req,HttpSession session){
+        logger.info("调用【/user/isLogin】接口开始,请求报文：" + req.toString());
+        BaseResponseVo respVo = new BaseResponseVo();
+        if(StringUtils.isEmpty(req.getUsername())){
+            respVo.setBaseResponse(Constants.ERR_CODE_MISSING_BIZ,"账号不能为空");
+            return respVo;
+        }
+        if(session == null
+                || session.getAttribute("loginUser") == null
+                || !req.getUsername().equals(session.getAttribute("loginUser").toString())){
+            respVo.setBaseResponse(Constants.ERR_FAILURE,"尚未登录");
+            return respVo;
+        }
+        respVo.setBaseResponse(Constants.SUCCESS_CODE,"已登录");
+        logger.info("调用【/user/isLogin】接口结束，返回报文：" + respVo);
+        return respVo;
+    }
+    @RequestMapping(value = "/register")
+    public BaseResponseVo register(@RequestBody UserRequestVo req){
+        logger.info("调用【/user/register】接口开始：" + req.toString());
+        BaseResponseVo respVo = new BaseResponseVo();
+        if(StringUtils.isEmpty(req.getUsername()) || StringUtils.isEmpty(req.getPassword())){
+            logger.info("注册失败，账号或密码不能为空");
+            respVo.setBaseResponse(Constants.ERR_CODE_MISSING_BIZ,"账号或密码不能为空");
+            return respVo;
+        }
+        //检验账号是否已存在
+        User user = userService.getUserByName(req.getUsername());
+        if(user != null){
+            logger.info("注册失败，用户已存在");
+            respVo.setBaseResponse(Constants.ERR_FAILURE,"用户已存在");
+            return respVo;
+        }
+        //注册账号
+        if(userService.createUser(req.getUsername(),req.getPassword())){
+           logger.info("注册成功");
+           respVo.setBaseResponse(Constants.SUCCESS_CODE,"注册成功");
+        }else{
+            respVo.setBaseResponse(Constants.ERR_FAILURE,"注册失败，请重试");
+        }
+        logger.info("调用【/user/register】接口结束：" + respVo.toString());
+        return respVo;
+    }
 }

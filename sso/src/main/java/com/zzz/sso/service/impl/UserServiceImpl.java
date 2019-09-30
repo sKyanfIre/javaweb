@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 /**
  * @author zzz
  * @description
@@ -25,7 +27,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUser(String username, String password) {
         User user = new User();
-        user.setIsValid(Constants.VALID);
+        user.setValid(Constants.VALID);
         user.setUsername(username);
         user.setPassword(password);
 
@@ -34,6 +36,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean createUser(String username, String password) {
+        User user = new User();
+        //生成uuid
+        String userId = UUID.randomUUID().toString().replace("-","");
+        user.setUserId(userId);
+        user.setValid(Constants.VALID);
+        user.setUsername(username);
+        user.setPassword(password);
+        if(userDao.insertUser(user) == 1){
+            return true;
+        }
         return false;
+    }
+
+    @Override
+    public User getUserByName(String username) {
+        User user = new User();
+        user.setUsername(username);
+        user.setValid(Constants.VALID);
+        return userDao.selectUser(user);
     }
 }
